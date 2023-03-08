@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+circle.timer {
+    r: calc(50% - 6px);
+}

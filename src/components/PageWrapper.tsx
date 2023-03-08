@@ -22,9 +22,10 @@ const Navbar = () => {
             <div className='flex h-full w-full items-center justify-evenly bg-indigo-500 sm:flex-col sm:justify-start sm:gap-3 sm:p-4'>
                 {navbarItems.map(item => (
                     <button
+                        key={crypto.randomUUID()}
                         onClick={() => navigate(item.redirectTo)}
                         className={
-                            'relative flex flex-col items-center rounded-full bg-indigo-700 p-2.5 text-white shadow hover:bg-indigo-800 sm:order-none sm:h-16 sm:w-16 sm:rounded-lg ' +
+                            'relative flex flex-col items-center justify-center rounded-full bg-indigo-700 p-2.5 text-white shadow hover:bg-indigo-800 sm:order-none sm:h-16 sm:w-16 sm:rounded-lg ' +
                             orderingMap[item.mobileOrder || 0]
                         }
                     >
@@ -39,7 +40,9 @@ const Navbar = () => {
                             {item.svgPath}
                         </svg>
                         {item.text && (
-                            <div className='bottom-2 hidden translate-y-0.5 text-xs sm:block'>{item.text}</div>
+                            <div className='bottom-2 hidden w-full translate-y-0.5 truncate text-xs sm:block'>
+                                {item.text}
+                            </div>
                         )}
                     </button>
                 ))}
