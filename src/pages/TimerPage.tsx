@@ -4,20 +4,44 @@ import { PageWrapper } from '../components'
 interface TimerPageProps {}
 
 export const TimerPage: React.FC<TimerPageProps> = ({}) => {
-    const [cooldown, setCooldown] = React.useState(0)
+    const [set, setSet] = React.useState(0)
+    const [exercise, setExercise] = React.useState(0)
+    const [cooldown, setCooldown] = React.useState(cooldownTimeItems[0].value)
+    const [setNum, setSetNum] = React.useState(setItems[1].value)
+
+    const incrementSet = () => {
+        setSet(set + 1)
+        if (set == setNum) {
+            setSet(0)
+            setExercise(exercise + 1)
+        }
+    }
+
     return (
         <PageWrapper>
             <main className='flex h-full w-full max-w-lg flex-col items-center p-8 px-12'>
                 <div className='w-full text-center'>
-                    <h2 className='text-xl font-semibold'>Exercise 2</h2>
-                    <h2 className='text-3xl font-bold'>Set 3</h2>
+                    <h2 className='text-xl font-semibold'>Exercise {exercise}</h2>
+                    <h2 className='text-3xl font-bold'>Set {set}</h2>
                 </div>
-                <Timer time={10} />
+                <Timer time={cooldown} set={set} sets={setNum} increment={incrementSet} />
+                <div className='mt-10 w-full' />
                 <ButtonGroup
                     items={cooldownTimeItems}
                     title='Cooldown Time'
                     control={{ value: cooldown, setter: setCooldown }}
                 />
+                <ButtonGroup items={setItems} title='Sets' control={{ value: setNum, setter: setSetNum }} />
+
+                <button
+                    className='mt-10 w-full rounded-lg bg-red-500 p-1.5 px-2 text-white hover:bg-red-600'
+                    onClick={() => {
+                        setSet(0)
+                        setExercise(0)
+                    }}
+                >
+                    Reset
+                </button>
             </main>
         </PageWrapper>
     )
@@ -29,24 +53,48 @@ const cooldownTimeItems: ButtonItem[] = [
         value: 45,
     },
     {
+        display: '1:00',
+        value: 60,
+    },
+    {
         display: '1:30',
         value: 90,
     },
+]
+
+const setItems: ButtonItem[] = [
     {
-        display: '3:00',
-        value: 180,
+        display: '2',
+        value: 2,
+    },
+    {
+        display: '3',
+        value: 3,
+    },
+    {
+        display: '4',
+        value: 4,
     },
 ]
 
 interface TimerProps {
     time: number
+    set: number
+    sets: number
+    increment: () => void
 }
 
-const Timer: React.FC<TimerProps> = ({ time }) => {
+const Timer: React.FC<TimerProps> = ({ time, set, sets = 1, increment }) => {
     const [cooldown, setCooldown] = React.useState(false)
     const [remaining, setRemaining] = React.useState(time)
 
+    React.useEffect(() => setRemaining(time), [time])
+
     const startTimer = () => {
+        if (set == 0 || set == sets) {
+            finishTimer()
+            return
+        }
         setCooldown(true)
         const start = Date.now()
         const intervalId = setInterval(() => {
@@ -57,10 +105,23 @@ const Timer: React.FC<TimerProps> = ({ time }) => {
         }, 1)
     }
 
-    const finishTimer = (intervalId: number) => {
-        clearInterval(intervalId)
+    const finishTimer = (intervalId?: NodeJS.Timer) => {
+        if (intervalId) clearInterval(intervalId)
         setRemaining(time)
         setCooldown(false)
+        increment()
+    }
+
+    const formatTime = (remaining: number) => {
+        const seconds = Math.min(time, Math.floor(1 + remaining))
+        if (seconds < 60) return seconds
+        return `${Math.floor(seconds / 60)}:${('0' + (seconds % 60)).slice(-2)}`
+    }
+
+    const waitMessage = (): string => {
+        if (set == 0) return 'Start'
+        if (set == sets) return 'Finish'
+        return 'Cooldown'
     }
 
     return (
@@ -75,13 +136,11 @@ const Timer: React.FC<TimerProps> = ({ time }) => {
                     >
                         {cooldown ? (
                             <>
-                                <span className='text-7xl font-bold duration-300'>
-                                    {Math.min(time, Math.floor(1 + remaining))}
-                                </span>
-                                <sub>sec</sub>
+                                <span className='text-7xl font-bold duration-300'>{formatTime(remaining)}</span>
+                                <sub>{remaining >= 60 ? 'min' : 'sec'}</sub>
                             </>
                         ) : (
-                            <span className='text-3xl font-bold'>Cooldown</span>
+                            <span className='text-3xl font-bold'>{waitMessage()}</span>
                         )}
                     </div>
                 </div>
@@ -132,7 +191,7 @@ interface ButtonGroupProps {
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({ items, title, control }) => {
     const { value, setter } = control
     return (
-        <div className='mt-4 flex w-full flex-col'>
+        <div className='mt-4 flex w-full flex-col shadow-sm'>
             <h3>{title}</h3>
             <div className='flex w-full items-center justify-evenly rounded-lg border-2 border-indigo-500 text-indigo-500'>
                 {items.map(item => (
@@ -146,37 +205,8 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({ items, title, control 
                     </button>
                 ))}
                 <button
+                    disabled
                     aria-selected={value === -1}
-                    onClick={() => setter(3)}
-                    className='w-1/4 truncate p-1 px-2 duration-150 aria-selected:bg-indigo-500 aria-selected:text-white'
-                >
-                    Custom
-                </button>
-            </div>
-            <div className='flex w-full items-center justify-evenly rounded-lg border-2 border-indigo-500 text-indigo-500'>
-                <button
-                    aria-selected={value === 0}
-                    onClick={() => setter(0)}
-                    className='w-1/4 truncate border-r-2 border-indigo-500 p-1 px-2 duration-150 aria-selected:bg-indigo-500 aria-selected:text-white'
-                >
-                    0:45
-                </button>
-                <button
-                    aria-selected={value === 1}
-                    onClick={() => setter(1)}
-                    className='w-1/4 truncate border-r-2 border-indigo-500 p-1 px-2 duration-150 aria-selected:bg-indigo-500 aria-selected:text-white'
-                >
-                    1:30
-                </button>
-                <button
-                    aria-selected={value === 2}
-                    onClick={() => setter(2)}
-                    className='w-1/4 truncate border-r-2 border-indigo-500 p-1 px-2 duration-150 aria-selected:bg-indigo-500 aria-selected:text-white'
-                >
-                    3:00
-                </button>
-                <button
-                    aria-selected={value === 3}
                     onClick={() => setter(3)}
                     className='w-1/4 truncate p-1 px-2 duration-150 aria-selected:bg-indigo-500 aria-selected:text-white'
                 >

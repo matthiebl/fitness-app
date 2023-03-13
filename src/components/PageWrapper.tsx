@@ -9,7 +9,7 @@ export const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
     return (
         <div className='h-screen w-screen'>
             <Navbar />
-            <div className='flex h-full w-full justify-center pb-16 sm:pb-0 sm:pl-24'>{children}</div>
+            <div className='flex min-h-full w-full justify-center pb-16 sm:pb-0 sm:pl-24'>{children}</div>
         </div>
     )
 }
