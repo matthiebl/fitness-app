@@ -14,9 +14,9 @@ interface ButtonGroupProps {
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({ items, title, control }) => {
     const { value, setter } = control
     return (
-        <div className='mt-4 flex w-full flex-col shadow-sm'>
+        <div className='mt-4 flex w-full flex-col'>
             <h3>{title}</h3>
-            <div className='flex w-full items-center justify-evenly rounded-lg border-2 border-indigo-500 text-indigo-500'>
+            <div className='flex w-full items-center justify-evenly rounded-lg border-2 border-indigo-500 text-indigo-500 shadow'>
                 {items.map(item => (
                     <button
                         key={crypto.randomUUID()}
