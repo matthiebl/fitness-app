@@ -1,13 +1,14 @@
 import React from 'react'
 import { ButtonGroup, PageWrapper, TButtonItem, Timer } from '../components'
+import { useLocalStorage } from '../hooks'
 
 interface TimerPageProps {}
 
 export const TimerPage: React.FC<TimerPageProps> = ({}) => {
-    const [set, setSet] = React.useState(0)
-    const [exercise, setExercise] = React.useState(0)
-    const [cooldown, setCooldown] = React.useState(cooldownTimeItems[0].value)
-    const [setNum, setSetNum] = React.useState(setItems[1].value)
+    const [set, setSet] = useLocalStorage<number>('set', 0)
+    const [exercise, setExercise] = useLocalStorage<number>('exercise', 1)
+    const [cooldown, setCooldown] = useLocalStorage<number>('cooldown', cooldownTimeItems[0].value)
+    const [setNum, setSetNum] = useLocalStorage<number>('sets', setItems[1].value)
 
     const incrementSet = () => {
         setSet(set + 1)
@@ -20,9 +21,11 @@ export const TimerPage: React.FC<TimerPageProps> = ({}) => {
     return (
         <PageWrapper>
             <main className='flex h-full w-full max-w-lg flex-col items-center p-8 px-12'>
-                <div className='w-full text-center'>
+                <div className='w-full text-center text-gray-700'>
                     <h2 className='text-xl font-semibold'>Exercise {exercise}</h2>
-                    <h2 className='text-3xl font-bold'>Set {set}</h2>
+                    <h2 className='text-3xl font-bold'>
+                        Set {set}/{setNum}
+                    </h2>
                 </div>
                 <Timer time={cooldown} set={set} sets={setNum} increment={incrementSet} />
                 <div className='mt-10 w-full' />
@@ -37,7 +40,7 @@ export const TimerPage: React.FC<TimerPageProps> = ({}) => {
                     className='mt-10 w-full rounded-lg bg-indigo-500 p-1.5 px-2 text-white hover:bg-indigo-600'
                     onClick={() => {
                         setSet(0)
-                        setExercise(0)
+                        setExercise(1)
                     }}
                 >
                     Reset
