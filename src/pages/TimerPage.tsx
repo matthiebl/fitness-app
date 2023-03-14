@@ -34,7 +34,7 @@ export const TimerPage: React.FC<TimerPageProps> = ({}) => {
                 <ButtonGroup items={setItems} title='Sets' control={{ value: setNum, setter: setSetNum }} />
 
                 <button
-                    className='mt-10 w-full rounded-lg bg-red-500 p-1.5 px-2 text-white hover:bg-red-600'
+                    className='mt-10 w-full rounded-lg bg-indigo-500 p-1.5 px-2 text-white hover:bg-indigo-600'
                     onClick={() => {
                         setSet(0)
                         setExercise(0)

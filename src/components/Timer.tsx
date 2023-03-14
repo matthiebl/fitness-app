@@ -54,7 +54,7 @@ export const Timer: React.FC<TimerProps> = ({ time, set, sets = 1, increment }) 
                     <div
                         className={
                             'flex h-full w-full flex-col items-center justify-center rounded-full bg-white p-4 shadow-inner ' +
-                            timeColour(remaining, !cooldown)
+                            textColour(remaining, !cooldown)
                         }
                     >
                         {cooldown ? (
@@ -94,8 +94,8 @@ const timerColour = (time: number): string => {
     return 'stroke-sky-500'
 }
 
-const timeColour = (time: number, waiting: boolean): string => {
-    if (waiting) return 'text-green-500'
+const textColour = (time: number, waiting: boolean): string => {
+    if (waiting) return 'text-sky-500'
     if (time <= 5) return 'text-red-500'
     return 'text-sky-500'
 }
