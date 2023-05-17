@@ -1,6 +1,6 @@
 # Fitness App
 
-See website hosted with Google Firebase here: fitness.mhiebl.com
+See website hosted with Google Firebase here: https://fitness.mhiebl.com
 
 This web app was a simple idea I had, allowing me to customise cooldowns and sets for my own workouts.
 
