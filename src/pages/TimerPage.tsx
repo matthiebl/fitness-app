@@ -20,7 +20,7 @@ export const TimerPage: React.FC<TimerPageProps> = ({}) => {
 
     return (
         <PageWrapper>
-            <main className='flex h-full w-full max-w-lg flex-col items-center p-8 px-12'>
+            <main className='flex h-full w-full max-w-lg flex-col items-center p-8 px-12 sm:mr-[88px]'>
                 <div className='w-full text-center text-gray-700'>
                     <h2 className='text-xl font-semibold'>Exercise {exercise}</h2>
                     <h2 className='text-3xl font-bold'>
